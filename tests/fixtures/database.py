@@ -46,11 +46,6 @@ def container_postgres_url() -> str:
         yield pg_url
 
 
-@pytest.fixture(scope="session")
-def postgres_url(settings):
-    return settings.postgres.url
-
-
 @pytest.fixture()
 def uow(db_session) -> "FakeSQLAlchemyUoW":
     return FakeSQLAlchemyUoW(
