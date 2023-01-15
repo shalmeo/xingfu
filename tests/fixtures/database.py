@@ -3,6 +3,9 @@ import os
 from typing import Callable
 
 import pytest
+import alembic.config
+from alembic import command
+from alembic.script import ScriptDirectory
 
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -68,8 +71,8 @@ def uow(db_session) -> "FakeSQLAlchemyUoW":
 
 
 @pytest.fixture(scope="session")
-def session_factory(postgres_url):
-    engine = create_async_engine(postgres_url, echo=True)
+def session_factory(container_postgres_url):
+    engine = create_async_engine(container_postgres_url, echo=True)
     sm = sessionmaker(
         bind=engine,
         expire_on_commit=False,
@@ -87,21 +90,21 @@ def db_wipe(session_factory):
     loop.close()
 
 
-# @pytest.fixture(scope="session", autouse=True)
-# def test_db(session_factory, postgres_url, db_wipe) -> None:
-#     cfg = alembic.config.Config()
-#     cfg.set_main_option("script_location", "src/infrastructure/database/migrations")
-#     cfg.set_main_option("sqlalchemy.url", postgres_url)
-#
-#     revisions_dir = ScriptDirectory.from_config(cfg)
-#
-#     # Get & sort migrations, from first to last
-#     revisions = list(revisions_dir.walk_revisions())
-#     revisions.reverse()
-#     for revision in revisions:
-#         command.upgrade(cfg, revision.revision)
-#         command.downgrade(cfg, revision.down_revision or "-1")
-#         command.upgrade(cfg, revision.revision)
+@pytest.fixture(scope="session", autouse=True)
+def test_db(session_factory, postgres_url, db_wipe) -> None:
+    cfg = alembic.config.Config()
+    cfg.set_main_option("script_location", "src/infrastructure/database/migrations")
+    cfg.set_main_option("sqlalchemy.url", postgres_url)
+
+    revisions_dir = ScriptDirectory.from_config(cfg)
+
+    # Get & sort migrations, from first to last
+    revisions = list(revisions_dir.walk_revisions())
+    revisions.reverse()
+    for revision in revisions:
+        command.upgrade(cfg, revision.revision)
+        command.downgrade(cfg, revision.down_revision or "-1")
+        command.upgrade(cfg, revision.revision)
 
 
 @pytest.fixture(scope="function")
