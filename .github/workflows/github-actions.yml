@@ -34,7 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ECHO
-        run: echo ${{ secrets.COMPANY_OWNER }}
+        if: ${{ secrets.COMPANY_OWNER }} != null
+        run: echo Hello World
       - name: Checkout branch
         uses: actions/checkout@v3
 
