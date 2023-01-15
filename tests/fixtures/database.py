@@ -86,10 +86,10 @@ def db_wipe(session_factory):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def test_db(session_factory, postgres_url, db_wipe) -> None:
+def test_db(session_factory, container_postgres_url, db_wipe) -> None:
     cfg = alembic.config.Config()
     cfg.set_main_option("script_location", "src/infrastructure/database/migrations")
-    cfg.set_main_option("sqlalchemy.url", postgres_url)
+    cfg.set_main_option("sqlalchemy.url", container_postgres_url)
 
     revisions_dir = ScriptDirectory.from_config(cfg)
 
