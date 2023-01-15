@@ -108,8 +108,8 @@ def test_db(session_factory, postgres_url, db_wipe) -> None:
 
 
 @pytest.fixture(scope="function")
-async def db_session(session_factory, settings) -> AsyncSession:
-    async with create_async_engine(settings.postgres.url).connect() as connect:
+async def db_session(session_factory, container_postgres_url) -> AsyncSession:
+    async with create_async_engine(container_postgres_url).connect() as connect:
         transaction = await connect.begin()
         async_session: AsyncSession = session_factory(bind=connect)
         await async_session.begin_nested()
