@@ -4,7 +4,7 @@ WORKDIR /usr
 
 COPY requirements.txt /usr
 RUN apt-get update \
- && apt-get install -y gcc \
+ && apt-get install -y libpq-dev gcc \
  && pip install --no-cache-dir --upgrade pip \
  && pip install --no-cache-dir setuptools wheel \
  && pip install --no-cache-dir -r requirements.txt \
