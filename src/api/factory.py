@@ -41,6 +41,7 @@ def create_application(
 
     application.dependency_overrides = {
         providers.session_provider: providers.session(postgres_url),
+        providers.sm_provider: lambda: providers.sm(postgres_url),
         providers.uow_provider: providers.uow,
         providers.bot_provider: lambda: bot,
         providers.dispatcher_provider: lambda: dispatcher,

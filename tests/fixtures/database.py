@@ -1,5 +1,6 @@
 import asyncio
 import os
+import datetime
 from typing import Callable
 
 import pytest
@@ -46,25 +47,6 @@ def container_postgres_url() -> str:
         yield pg_url
 
 
-@pytest.fixture()
-def uow(db_session) -> "FakeSQLAlchemyUoW":
-    return FakeSQLAlchemyUoW(
-        db_session,
-        user_repo=UserRepo,
-        teacher_reader=TeacherReader,
-        teacher_repo=TeacherRepo,
-        admin_reader=AdminReader,
-        admin_repo=AdminRepo,
-        student_reader=StudentReader,
-        student_repo=StudentRepo,
-        group_reader=GroupReader,
-        group_repo=GroupRepo,
-        task_reader=TaskReader,
-        uncertain_reader=UncertainReader,
-        uncertain_repo=UncertainRepo,
-    )
-
-
 @pytest.fixture(scope="session")
 def session_factory(container_postgres_url):
     engine = create_async_engine(container_postgres_url, echo=True)
@@ -87,6 +69,7 @@ def db_wipe(session_factory):
 
 @pytest.fixture(scope="session", autouse=True)
 def test_db(session_factory, container_postgres_url, db_wipe) -> None:
+    print("TEST_DB")
     cfg = alembic.config.Config()
     cfg.set_main_option("script_location", "src/infrastructure/database/migrations")
     cfg.set_main_option("sqlalchemy.url", container_postgres_url)
@@ -173,3 +156,22 @@ class FakeSQLAlchemyUoW(FakeSQLAlchemyBaseUoW, IUserUoW, ITeacherUoW, IAdminUoW,
         self.uncertain_repo = uncertain_repo(session)
 
         super().__init__(session)
+
+
+@pytest.fixture()
+def uow(db_session) -> FakeSQLAlchemyUoW:
+    return FakeSQLAlchemyUoW(
+        db_session,
+        user_repo=UserRepo,
+        teacher_reader=TeacherReader,
+        teacher_repo=TeacherRepo,
+        admin_reader=AdminReader,
+        admin_repo=AdminRepo,
+        student_reader=StudentReader,
+        student_repo=StudentRepo,
+        group_reader=GroupReader,
+        group_repo=GroupRepo,
+        task_reader=TaskReader,
+        uncertain_reader=UncertainReader,
+        uncertain_repo=UncertainRepo,
+    )

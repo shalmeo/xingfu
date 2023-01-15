@@ -1,4 +1,4 @@
-from .session import session_provider, session
+from .session import sm_provider, sm, session_provider, session
 from .uow import uow_provider, uow
 from .bot import (
     bot_provider,

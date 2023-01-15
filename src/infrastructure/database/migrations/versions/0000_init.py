@@ -102,9 +102,7 @@ def upgrade() -> None:
         sa.Column(
             "access_end",
             sa.Date(),
-            server_default=sa.text(
-                "TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"
-            ),
+            server_default=sa.text("TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"),
             nullable=True,
         ),
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
@@ -143,9 +141,7 @@ def upgrade() -> None:
         sa.Column("user_id", sa.BigInteger(), nullable=True),
         sa.Column(
             "status",
-            sa.Enum(
-                "DURING", "DELIVERED", "NOT_DELIVERED", name="distributionrecordstatus"
-            ),
+            sa.Enum("DURING", "DELIVERED", "NOT_DELIVERED", name="distributionrecordstatus"),
             nullable=True,
         ),
         sa.ForeignKeyConstraint(
@@ -200,9 +196,7 @@ def upgrade() -> None:
         sa.Column(
             "access_end",
             sa.Date(),
-            server_default=sa.text(
-                "TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"
-            ),
+            server_default=sa.text("TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"),
             nullable=True,
         ),
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
@@ -250,9 +244,7 @@ def upgrade() -> None:
         sa.Column(
             "access_end",
             sa.Date(),
-            server_default=sa.text(
-                "TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"
-            ),
+            server_default=sa.text("TIMEZONE('utc', CURRENT_TIMESTAMP) + interval '10 year'"),
             nullable=True,
         ),
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
@@ -501,24 +493,6 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_work_files")),
     )
-
-    bind = op.get_bind()
-    session = orm.Session(bind=bind)
-
-    settings = get_settings()
-    for i, admin in enumerate(settings.bot_admins, 1):
-        user = models.User(
-            email=f"root{i}@email.com", role=UserRole.ROOT, telegram_id=admin
-        )
-        admin = models.Admin(
-            name=f"root{i}",
-            surname=f"admin{i}",
-            birthday=datetime.date.today(),
-        )
-        admin.user = user
-        session.add_all((admin, user))
-
-    session.commit()
     # ### end Alembic commands ###
 
 
@@ -550,11 +524,7 @@ def downgrade() -> None:
         "PARENT",
         name="userrole",
     ).drop(op.get_bind())
-    sa.Enum("DURING", "FINISHED", "STOPPED", name="distributionstatus").drop(
-        op.get_bind()
-    )
-    sa.Enum(
-        "DURING", "DELIVERED", "NOT_DELIVERED", name="distributionrecordstatus"
-    ).drop(op.get_bind())
+    sa.Enum("DURING", "FINISHED", "STOPPED", name="distributionstatus").drop(op.get_bind())
+    sa.Enum("DURING", "DELIVERED", "NOT_DELIVERED", name="distributionrecordstatus").drop(op.get_bind())
     sa.Enum("ACCEPTED", "CHECKING", "REJECTED", name="workstatus").drop(op.get_bind())
     # ### end Alembic commands ###
