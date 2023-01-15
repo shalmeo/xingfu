@@ -19,3 +19,4 @@ aiohttp==3.8.3
 httpx==0.23.1
 testcontainers==3.7.1
 psycopg2==2.9.5
+psycopg2-binary
