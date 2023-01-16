@@ -58,9 +58,6 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v3
 
-      - name: Create environment
-        run: echo ${{ secrets.ENV }} > .env
-
       - name: Copy files via SSH
         uses: appleboy/scp-action@master
         with:
@@ -68,7 +65,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          source: "docker-compose.yml,.env"
+          source: "docker-compose.yml"
           target: ${{ github.repository }}
 
       - name: Deploy to server via SSH
@@ -79,5 +76,6 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            echo ${{ secrets.ENV }} > ${{ github.repository }}/.env
             docker-compose --file ${{ github.repository }}/docker-compose.yml pull
             docker-compose --file ${{ github.repository }}/docker-compose.yml up -d
