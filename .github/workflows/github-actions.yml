@@ -71,13 +71,13 @@ jobs:
           source: "docker-compose.yml,.env"
           target: ${{ github.repository }}
 
-#      - name: Deploy to server via SSH
-#        uses: appleboy/ssh-action@v0.1.7
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          key: ${{ secrets.KEY }}
-#          port: ${{ secrets.PORT }}
-#          script: |
-#            docker-compose --file ${{ github.repository }}/docker-compose.yml pull
-#            docker-compose --file ${{ github.repository }}/docker-compose.yml up -d
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            docker-compose --file ${{ github.repository }}/docker-compose.yml pull
+            docker-compose --file ${{ github.repository }}/docker-compose.yml up -d
