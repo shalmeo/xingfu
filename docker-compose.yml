@@ -1,8 +1,7 @@
 version: '3.3'
 services:
   api:
-    build:
-      context: .
+    image: ghcr.io/shalmeo/shalmeo/xingfu:latest
     stop_signal: SIGINT
     restart: "unless-stopped"
     volumes:
@@ -11,6 +10,7 @@ services:
       - "5000:80"
     depends_on:
       - database
+      - redis
     networks:
       - worknet
   database:
