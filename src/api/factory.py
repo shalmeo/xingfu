@@ -22,11 +22,11 @@ def create_application(
 
     application.include_router(root.router)
     application.include_router(webhook.router)
-    application.mount(
-        "/",
-        app=SinglePageApplication("/home/shalmeo/projects/xingfu/frontend/dist"),
-        name="SPA",
-    )
+    # application.mount(
+    #     "/",
+    #     app=SinglePageApplication("/home/shalmeo/projects/xingfu/frontend/dist"),
+    #     name="SPA",
+    # )
 
     application.add_exception_handler(NotFound, not_found_error)
     application.add_exception_handler(AlreadyExists, conflict_error)
