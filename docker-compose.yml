@@ -1,11 +1,10 @@
 version: '3.3'
 services:
   api:
+    env_file: .env
     image: ghcr.io/shalmeo/shalmeo/xingfu:latest
     stop_signal: SIGINT
     restart: "unless-stopped"
-    volumes:
-      - .:/usr
     ports:
       - "5000:80"
     depends_on:
