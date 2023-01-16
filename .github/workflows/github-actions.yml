@@ -1,11 +1,11 @@
 name: CI/CD
-run-name: ${{ github.actor }} CI/CD Pipline
+run-name: ${{ github.actor }}/${{ github.event.repository.name }} Pipline
 on: [push]
 
 env:
-  REGISTRY: "ghcr.io/shalmeo"  # REPLACE
-  IMAGE_NAME: ${{ github.repository }}
-  CONTAINER_NAME: "xingfu-container" # REPLACE
+  REGISTRY: "ghcr.io/${{ github.actor }}"
+  IMAGE_NAME: ${{ github.event.repository.name }}
+  CONTAINER_NAME: "${{ github.event.repository.name }}-container"
 
 jobs:
   integration:

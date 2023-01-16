@@ -2,7 +2,7 @@ version: '3.3'
 services:
   api:
     env_file: .env
-    image: ghcr.io/shalmeo/shalmeo/xingfu:latest
+    image: ghcr.io/shalmeo/xingfu:latest
     stop_signal: SIGINT
     restart: "unless-stopped"
     ports:
