@@ -4,7 +4,7 @@ on: [push]
 
 env:
   REGISTRY: "ghcr.io/shalmeo"  # REPLACE
-  IMAGE_NAME: "xingfu-image"  # REPLACE
+  IMAGE_NAME: ${{ github.repository }}
   CONTAINER_NAME: "xingfu-container" # REPLACE
 
 jobs:
@@ -32,6 +32,9 @@ jobs:
           pytest --asyncio-mode=auto
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
