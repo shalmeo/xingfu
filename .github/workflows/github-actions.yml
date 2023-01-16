@@ -79,5 +79,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            docker-compose --file ${{ github.repository }}/docker-compose.yml pull 
-            docker-compose --file ${{ github.repository }}/docker-compose.yml up -d
+            docker-compose --file ${{ github.repository }}/docker-compose.yml pull
+            docker-compose --file ${{ github.repository }}/docker-compose.yml up -d redis database
+            docker-compose --file ${{ github.repository }}/docker-compose.yml run api alembic upgrade head
+            docker-compose --file ${{ github.repository }}/docker-compose.yml up -d api

@@ -13,9 +13,8 @@ from src.settings import get_settings
 
 config = context.config
 
-if not config.get_main_option("sqlalchemy.url"):
-    settings = get_settings()
-    config.set_main_option("sqlalchemy.url", settings.postgres.url)
+settings = get_settings()
+config.set_main_option("sqlalchemy.url", settings.postgres.url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

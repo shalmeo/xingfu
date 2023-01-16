@@ -30,7 +30,6 @@ services:
   redis:
     env_file: .env
     image: redis:7.0-rc-alpine
-    container_name: "eiee-redis"
     volumes:
       - "./volumes/redis/redis.conf:/usr/local/etc/redis"
       - "./volumes/redis/data:/data"
