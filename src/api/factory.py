@@ -23,6 +23,7 @@ def create_application(
     api_router.include_router(root.router)
     api_router.include_router(uncertain.router)
     
+    application.include_router(api_router)
     application.include_router(webhook.router)
 
     application.add_exception_handler(NotFound, not_found_error)
