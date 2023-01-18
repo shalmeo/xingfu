@@ -17,7 +17,7 @@ class UserMiddleware(BaseMiddleware):
         if event_from_user:
             from_user_id = event_from_user.id
             uow: IUserUoW = data["uow"]
-            user = await GetUserRole(uow=uow)(int(from_user_id))
+            user = await GetUserRole(uow)(int(from_user_id))
             data["user_role"] = user
 
         return await handler(event, data)

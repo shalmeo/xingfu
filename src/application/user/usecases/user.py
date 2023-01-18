@@ -3,7 +3,7 @@ from src.domain.user.models.user import UserRole
 
 
 class UserUseCase:
-    async def __init__(self, uow: IUserUoW):
+    def __init__(self, uow: IUserUoW):
         self.uow = uow
         
 
