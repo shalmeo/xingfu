@@ -18,7 +18,7 @@ from src.application.uncertain.interfaces.persistense import (
     IUncertainRepo,
 )
 from src.application.uncertain.interfaces.uow import IUncertainUoW
-from src.application.user.interfaces.persistense import IUserRepo
+from src.application.user.interfaces.persistense import IUserReader, IUserRepo
 from src.application.user.interfaces.uow import IUserUoW
 
 
@@ -46,6 +46,7 @@ class SQLAlchemyUoW(
     def __init__(
         self,
         session: AsyncSession,
+        user_reader: Callable[..., IUserReader],
         user_repo: Callable[..., IUserRepo],
         teacher_reader: Callable[..., ITeacherReader],
         teacher_repo: Callable[..., ITeacherRepo],
@@ -59,6 +60,7 @@ class SQLAlchemyUoW(
         uncertain_reader: Callable[..., IUncertainReader],
         uncertain_repo: Callable[..., IUncertainRepo],
     ):
+        self.user_reader = user_reader(session)
         self.user_repo = user_repo(session)
         self.teacher_reader = teacher_reader(session)
         self.teacher_repo = teacher_repo(session)

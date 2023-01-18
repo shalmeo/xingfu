@@ -10,7 +10,7 @@ from src.infrastructure.database.dao.student import StudentReader, StudentRepo
 from src.infrastructure.database.dao.task import TaskReader
 from src.infrastructure.database.dao.teacher import TeacherReader, TeacherRepo
 from src.infrastructure.database.dao.uncertain import UncertainReader, UncertainRepo
-from src.infrastructure.database.dao.user import UserRepo
+from src.infrastructure.database.dao.user import UserReader, UserRepo
 from src.infrastructure.uow import SQLAlchemyUoW
 
 
@@ -28,6 +28,7 @@ class DatabaseMiddleware(BaseMiddleware):
             data["session"] = session
             data["uow"] = SQLAlchemyUoW(
                 session,
+                user_reader=UserReader,
                 user_repo=UserRepo,
                 teacher_reader=TeacherReader,
                 teacher_repo=TeacherRepo,

@@ -1,12 +1,16 @@
 from sqlalchemy import insert, literal_column, update, select, delete
 
 from src.application.user.dto.user import UserDTO
-from src.application.user.interfaces.persistense import IUserRepo
-from src.domain.user.models.user import User
+from src.application.user.interfaces.persistense import IUserRepo, IUserReader
+from src.domain.user.models.user import User, UserRole
 from src.infrastructure.database import models
 from src.infrastructure.database.dao.dao import SQLAlchemyDAO
 
-
+class UserReader(SQLAlchemyDAO, IUserReader):
+    async def get_user_role(self, user_id: int) -> UserRole:
+        return await self.session.scalar(select(models.User.role).where(models.User.id == user_id))
+    
+        
 class UserRepo(SQLAlchemyDAO, IUserRepo):
     async def get_user(self, user_id: int) -> User:
         user = await self.session.scalar(
