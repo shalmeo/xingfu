@@ -4,7 +4,7 @@ from sqlalchemy import select, func, insert, delete
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import joinedload
 
-from src.application.common.exceptions.common import OffsetNegative
+from src.application.common.exceptions.common import OffsetNegative, NotFound
 from src.application.uncertain.dto.uncertain import UncertainDTO
 from src.application.uncertain.dto.user import UserDTO
 from src.application.uncertain.interfaces.persistense import (
@@ -23,6 +23,9 @@ class UncertainReader(SQLAlchemyDAO, IUncertainReader):
             .where(models.Uncertain.id == uncertain_id)
             .options(joinedload(models.Uncertain.user))
         )
+
+        if not uncertain:
+            raise NotFound
 
         return map_to_dto(uncertain)
 
@@ -60,9 +63,7 @@ class UncertainRepo(SQLAlchemyDAO, IUncertainRepo):
         return uncertain
 
     async def get_uncertain(self, uncertain_id: UUID) -> Uncertain:
-        uncertain = await self.session.scalar(
-            select(models.Uncertain).where(models.Uncertain.id == uncertain_id)
-        )
+        uncertain = await self.session.scalar(select(models.Uncertain).where(models.Uncertain.id == uncertain_id))
 
         return Uncertain(
             id=uncertain.id,
@@ -74,9 +75,7 @@ class UncertainRepo(SQLAlchemyDAO, IUncertainRepo):
         )
 
     async def delete_uncertain(self, uncertain_id: UUID) -> None:
-        await self.session.execute(
-            delete(models.Uncertain).where(models.Uncertain.id == uncertain_id)
-        )
+        await self.session.execute(delete(models.Uncertain).where(models.Uncertain.id == uncertain_id))
 
 
 def map_to_dto(uncertain: models.Uncertain) -> UncertainDTO:
@@ -87,6 +86,7 @@ def map_to_dto(uncertain: models.Uncertain) -> UncertainDTO:
         patronymic=uncertain.patronymic,
         birthday=uncertain.birthday,
         user=UserDTO(
+            id=uncertain.user.id,
             email=uncertain.user.email,
             timezone=uncertain.user.timezone,
             phone=uncertain.user.phone,

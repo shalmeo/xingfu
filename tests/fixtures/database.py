@@ -20,9 +20,11 @@ from src.application.group.interfaces.uow import IGroupUoW
 from src.application.student.interfaces.persistense import IStudentReader, IStudentRepo
 from src.application.student.interfaces.uow import IStudentUoW
 from src.application.task.interfaces.persistense import ITaskReader
+from src.application.task.interfaces.uow import ITaskUoW
 from src.application.teacher.interfaces.persistense import ITeacherReader, ITeacherRepo
 from src.application.teacher.interfaces.uow import ITeacherUoW
 from src.application.uncertain.interfaces.persistense import IUncertainReader, IUncertainRepo
+from src.application.uncertain.interfaces.uow import IUncertainUoW
 from src.application.user.interfaces.persistense import IUserRepo
 from src.application.user.interfaces.uow import IUserUoW
 from src.infrastructure.database.dao.admin import AdminReader, AdminRepo
@@ -123,7 +125,9 @@ class FakeSQLAlchemyBaseUoW(IUoW):
         await self._session.rollback()
 
 
-class FakeSQLAlchemyUoW(FakeSQLAlchemyBaseUoW, IUserUoW, ITeacherUoW, IAdminUoW, IStudentUoW, IGroupUoW):
+class FakeSQLAlchemyUoW(
+    FakeSQLAlchemyBaseUoW, IUserUoW, ITeacherUoW, IAdminUoW, IStudentUoW, IGroupUoW, ITaskUoW, IUncertainUoW
+):
     def __init__(
         self,
         session: AsyncSession,

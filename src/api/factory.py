@@ -5,8 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from src.api import providers
 from src.api.error_handlers.conflict import conflict_error
 from src.api.error_handlers.not_found import not_found_error
-from src.api.routes import webhook, root
-from src.api.spa import SinglePageApplication
+from src.api.routes import webhook, root, uncertain
 from src.application.common.exceptions.common import NotFound, AlreadyExists
 
 
@@ -21,12 +20,8 @@ def create_application(
     application = FastAPI()
 
     application.include_router(root.router)
+    application.include_router(uncertain.router)
     application.include_router(webhook.router)
-    # application.mount(
-    #     "/",
-    #     app=SinglePageApplication("/home/shalmeo/projects/xingfu/frontend/dist"),
-    #     name="SPA",
-    # )
 
     application.add_exception_handler(NotFound, not_found_error)
     application.add_exception_handler(AlreadyExists, conflict_error)

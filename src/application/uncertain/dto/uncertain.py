@@ -12,3 +12,9 @@ class UncertainDTO(BirthdayMixin):
     patronymic: Optional[str]
 
     user: UserDTO
+
+
+class UncertainCreateDTO(BirthdayMixin):
+    name: str
+    surname: str
+    patronymic: Optional[str]

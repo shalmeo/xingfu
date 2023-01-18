@@ -4,6 +4,7 @@ from src.application.common.dto.common import DTO
 
 
 class UserDTO(DTO):
+    id: int
     email: str
     timezone: str
     phone: Optional[int]

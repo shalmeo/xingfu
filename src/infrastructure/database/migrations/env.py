@@ -13,7 +13,6 @@ from src.settings import get_settings
 
 config = context.config
 
-
 if config.get_main_option("sqlalchemy.url") == "driver://user:pass@localhost/dbname":
     settings = get_settings()
     config.set_main_option("sqlalchemy.url", settings.postgres.url)
