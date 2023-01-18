@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src.api import providers
@@ -19,8 +19,10 @@ def create_application(
 ) -> FastAPI:
     application = FastAPI()
 
-    application.include_router(root.router)
-    application.include_router(uncertain.router)
+    api_router = APIRouter(prefix="/api")
+    api_router.include_router(root.router)
+    api_router.include_router(uncertain.router)
+    
     application.include_router(webhook.router)
 
     application.add_exception_handler(NotFound, not_found_error)
