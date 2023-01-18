@@ -11,7 +11,7 @@ from src.domain.user.models.user import UserRole
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/uncertain")
 async def create_uncertain(uncertain: UncertainCreateRequest, uow: IUncertainUoW = Depends(providers.uow_provider)):
     await AddUncertain(uow)(
         UserCreateDTO(
