@@ -1,4 +1,4 @@
-name: Tests workflow
+name: Run tests
 run-name: ${{ github.actor }}/${{ github.event.repository.name }} tests pipeline
 on: [push]
 

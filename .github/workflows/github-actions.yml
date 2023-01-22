@@ -1,8 +1,8 @@
-name: Deploy workflow
+name: Run deploy
 run-name: ${{ github.actor }}/${{ github.event.repository.name }} deploy pipeline
 on:
   workflow_run:
-    workflows: Tests workflow # Reuse the name of your tests workflow
+    workflows: [Tests workflow] # Reuse the name of your tests workflow
     branches: master
     types: completed
 
