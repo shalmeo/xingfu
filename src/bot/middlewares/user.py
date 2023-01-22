@@ -3,7 +3,7 @@ from typing import Any, Awaitable, Callable
 from aiogram import BaseMiddleware, types
 
 from src.application.user.interfaces.uow import IUserUoW
-from src.application.user.usecases.user import GetUserRole
+from src.application.user.usecases.user import GetUserByTelegramId
 
 
 class UserMiddleware(BaseMiddleware):
@@ -17,7 +17,7 @@ class UserMiddleware(BaseMiddleware):
         if event_from_user:
             from_user_id = event_from_user.id
             uow: IUserUoW = data["uow"]
-            user = await GetUserRole(uow)(int(from_user_id))
-            data["user_role"] = user
+            user = await GetUserByTelegramId(uow)(int(from_user_id))
+            data["user"] = user
 
         return await handler(event, data)

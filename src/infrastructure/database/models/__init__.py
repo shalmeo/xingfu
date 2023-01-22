@@ -9,4 +9,4 @@ from .group import Group, StudentGroupAssociation
 from .task import Task, TaskFile, TaskBlackList
 from .work import Work, WorkFile, Wom
 from .distrubution import Distribution, DistributionRecord
-from .uncertain import Uncertain
+from .undefined import Undefined

@@ -1,3 +1,4 @@
+from src.application.user.dto.user import UserDTO
 from src.application.user.interfaces.uow import IUserUoW
 from src.domain.user.models.user import UserRole
 
@@ -7,6 +8,6 @@ class UserUseCase:
         self.uow = uow
         
 
-class GetUserRole(UserUseCase):
-    async def __call__(self, user_id: int) -> UserRole:
-        return await self.uow.user_reader.get_user_role(user_id)
+class GetUserByTelegramId(UserUseCase):
+    async def __call__(self, telegram_id: int) -> UserDTO:
+        return await self.uow.user_reader.get_user_by_telegram_id(telegram_id)

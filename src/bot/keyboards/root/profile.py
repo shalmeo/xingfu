@@ -47,16 +47,14 @@ def get_profile_markup(ftl: TranslatorRunner) -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton(
-                text=ftl.root.profile.registry.uncertains.button(),
+                text=ftl.root.profile.registry.undefineds.button(),
                 callback_data=ProfileCallbackData(action=Registry.UNCERTAINS).pack(),
             )
         ],
         [
             InlineKeyboardButton(
                 text=ftl.root.profile.distriburions.button(),
-                callback_data=ProfileCallbackData(
-                    action=ProfileAction.DISTRIBUTIONS
-                ).pack(),
+                callback_data=ProfileCallbackData(action=ProfileAction.DISTRIBUTIONS).pack(),
             )
         ],
     ]

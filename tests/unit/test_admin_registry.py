@@ -1,7 +1,6 @@
 import datetime
 
 import pytest
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 from src.application.common.exceptions.common import NotFound
 from src.application.admin.dto.admin import AdminCreateDTO, AdminUpdateDTO
@@ -13,7 +12,6 @@ from src.application.admin.usecases.admin import (
 )
 from src.application.user.dto.user import UserCreateDTO, UserUpdateDTO
 from src.domain.user.models.user import UserRole
-from src.infrastructure.database import models
 from tests.fixtures.constants import (
     NAME,
     SURNAME,
@@ -44,21 +42,6 @@ admin_create = AdminCreateDTO(
     level=None,
     description=None,
 )
-
-
-async def test_add_admins(session_factory, container_postgres_url):
-    async with create_async_engine(container_postgres_url).connect() as connect:
-        async_session: AsyncSession = session_factory(bind=connect)
-        user = models.User(email=f"root1@email.com", role=UserRole.ROOT, telegram_id=123)
-        admin = models.Admin(
-            name=f"root1",
-            surname=f"admin1",
-            birthday=datetime.date.today(),
-        )
-        admin.user = user
-        async_session.add_all((admin, user))
-        await async_session.commit()
-        await async_session.close()
 
 
 async def test_create_admin(uow):

@@ -8,7 +8,7 @@ from src.bot.handlers.root import (
     teachers,
     students,
     groups,
-    uncertains,
+    undefined,
 )
 
 
@@ -22,7 +22,7 @@ def setup() -> Router:
     router.include_router(teachers.setup())
     router.include_router(students.setup())
     router.include_router(groups.setup())
-    router.include_router(uncertains.setup())
+    router.include_router(undefined.setup())
     router.include_router(profile.router)
     router.include_router(start.router)
 

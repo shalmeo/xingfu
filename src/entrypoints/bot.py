@@ -2,9 +2,9 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
+from sqlalchemy.orm import sessionmaker
 
 from src.api.factory import create_application
-from src.api import providers
 from src.bot.factory import create_bot, create_dispatcher
 from src.configure import configure_logging, configure_fluent, configure_postgres
 from src.infrastructure.database.init import add_initial_admins
@@ -33,9 +33,10 @@ def get_application():
         bot=bot,
         dispatcher=dispatcher,
         webhook_secret=settings.webhook.secret,
-        postgres_url=settings.postgres.url,
+        session_factory=session_factory,
         webhook_url=settings.webhook.url,
         bot_admins=settings.bot_admins,
+        use_spa=settings.web.use_spa,
     )
 
 
@@ -44,11 +45,11 @@ app = get_application()
 
 @app.on_event("startup")
 async def startup_event():
-    bot: Bot = app.dependency_overrides.get(providers.bot_provider)()
-    webhook_url: str = app.dependency_overrides.get(providers.webhook_url_provider)()
-    secret: str = app.dependency_overrides.get(providers.secret_provider)()
-    sm = app.dependency_overrides.get(providers.sm_provider)()
-    bot_admins = app.dependency_overrides.get(providers.bot_admins_provider)()
+    bot: Bot = app.state.bot
+    webhook_url: str = app.state.webhook_url
+    secret: str = app.state.secret
+    bot_admins = app.state.bot_admins
+    sm: sessionmaker = app.state.sessionmaker
 
     await bot.delete_webhook()
     await bot.set_webhook(url=webhook_url, drop_pending_updates=True, secret_token=secret)
@@ -57,8 +58,8 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    bot: Bot = app.dependency_overrides.get(providers.bot_provider)()
-    dispatcher: Dispatcher = app.dependency_overrides.get(providers.dispatcher_provider)()
+    bot: Bot = app.state.bot
+    dispatcher: Dispatcher = app.state.dispatcher
 
     await bot.session.close()
     await dispatcher.storage.close()

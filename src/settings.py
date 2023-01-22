@@ -35,6 +35,7 @@ class WebhookSettings(BaseModel):
 
 class Web(BaseModel):
     base_url: str
+    use_spa: bool
 
 
 class Settings(BaseSettings):

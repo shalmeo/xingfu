@@ -1,11 +1,10 @@
+from typing import TYPE_CHECKING
 from aiogram import Router, types
 from aiogram.filters import Command, StateFilter
 from fluentogram import TranslatorRunner
 
 if TYPE_CHECKING:
     from src.infrastructure.localization.translator import TranslatorRunner
-
-
 
 router = Router()
 

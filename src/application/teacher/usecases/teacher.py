@@ -5,7 +5,7 @@ from src.application.common.exceptions.common import NotFound, AlreadyExists
 from src.application.teacher.interfaces.uow import ITeacherUoW
 from src.domain.teacher.services.teacher import create_teacher, update_teacher
 from src.application.user.dto.user import UserCreateDTO, UserUpdateDTO
-from src.domain.uncertain.services.uncertain import create_uncertain
+from src.domain.undefined.services.undefined import create_undefined
 from src.domain.user.models.user import UserRole
 from src.domain.user.services.user import create_user, update_user
 from src.application.teacher.dto.teacher import (
@@ -50,7 +50,7 @@ class DeleteTeacher(TeacherUseCase):
     async def __call__(self, teacher_id: UUID) -> None:
         teacher = await self.uow.teacher_repo.get_teacher(teacher_id)
         user = await self.uow.user_repo.get_user(teacher.user_id)
-        uncertain = create_uncertain(
+        undefined = create_undefined(
             user_id=user.id,
             name=teacher.name,
             surname=teacher.surname,
@@ -58,7 +58,7 @@ class DeleteTeacher(TeacherUseCase):
             birthday=teacher.birthday,
         )
         user.change_own_role(UserRole.UNCERTAIN)
-        await self.uow.uncertain_repo.add_uncertain(uncertain)
+        await self.uow.undefined_repo.add_undefined(undefined)
         await self.uow.user_repo.update_user(user)
         await self.uow.teacher_repo.delete_teacher(teacher_id)
         await self.uow.commit()

@@ -1,6 +1,6 @@
 from src.application.common.interfaces.uow import IUoW
 from src.application.teacher.interfaces.persistense import ITeacherReader, ITeacherRepo
-from src.application.uncertain.interfaces.persistense import IUncertainRepo
+from src.application.undefined.interfaces.persistense import IUndefinedRepo
 from src.application.user.interfaces.persistense import IUserRepo
 
 
@@ -9,4 +9,4 @@ class ITeacherUoW(IUoW):
     teacher_repo: ITeacherRepo
 
     user_repo: IUserRepo
-    uncertain_repo: IUncertainRepo
+    undefined_repo: IUndefinedRepo

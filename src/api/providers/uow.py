@@ -8,7 +8,7 @@ from src.infrastructure.database.dao.group import GroupReader, GroupRepo
 from src.infrastructure.database.dao.student import StudentReader, StudentRepo
 from src.infrastructure.database.dao.task import TaskReader
 from src.infrastructure.database.dao.teacher import TeacherReader, TeacherRepo
-from src.infrastructure.database.dao.uncertain import UncertainReader, UncertainRepo
+from src.infrastructure.database.dao.undefined import UndefinedReader, UndefinedRepo
 from src.infrastructure.database.dao.user import UserReader, UserRepo
 from src.infrastructure.uow import SQLAlchemyUoW
 
@@ -31,6 +31,6 @@ def uow(session: AsyncSession = Depends(session_provider)) -> SQLAlchemyUoW:
         group_reader=GroupReader,
         group_repo=GroupRepo,
         task_reader=TaskReader,
-        uncertain_reader=UncertainReader,
-        uncertain_repo=UncertainRepo,
+        undefined_reader=UndefinedReader,
+        undefined_repo=UndefinedRepo,
     )

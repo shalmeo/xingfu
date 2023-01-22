@@ -3,11 +3,7 @@ import os
 from typing import Callable
 
 import pytest
-import alembic.config
-from alembic import command
-from alembic.script import ScriptDirectory
 
-from sqlalchemy import event
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
@@ -23,8 +19,8 @@ from src.application.task.interfaces.persistense import ITaskReader
 from src.application.task.interfaces.uow import ITaskUoW
 from src.application.teacher.interfaces.persistense import ITeacherReader, ITeacherRepo
 from src.application.teacher.interfaces.uow import ITeacherUoW
-from src.application.uncertain.interfaces.persistense import IUncertainReader, IUncertainRepo
-from src.application.uncertain.interfaces.uow import IUncertainUoW
+from src.application.undefined.interfaces.persistense import IUndefinedReader, IUndefinedRepo
+from src.application.undefined.interfaces.uow import IUndefinedUoW
 from src.application.user.interfaces.persistense import IUserRepo
 from src.application.user.interfaces.uow import IUserUoW
 from src.infrastructure.database.dao.admin import AdminReader, AdminRepo
@@ -32,8 +28,18 @@ from src.infrastructure.database.dao.group import GroupReader, GroupRepo
 from src.infrastructure.database.dao.student import StudentReader, StudentRepo
 from src.infrastructure.database.dao.task import TaskReader
 from src.infrastructure.database.dao.teacher import TeacherRepo, TeacherReader
-from src.infrastructure.database.dao.uncertain import UncertainReader, UncertainRepo
+from src.infrastructure.database.dao.undefined import UndefinedReader, UndefinedRepo
 from src.infrastructure.database.dao.user import UserRepo
+from src.infrastructure.database.init import add_initial_admins
+from src.infrastructure.database.models import Base
+from src.settings import get_settings
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest.fixture(scope="session")
@@ -49,69 +55,44 @@ def container_postgres_url() -> str:
 
 
 @pytest.fixture(scope="session")
-def session_factory(container_postgres_url):
-    engine = create_async_engine(container_postgres_url, echo=True)
+def local_postgres_url() -> str:
+    return get_settings().postgres.url
+
+
+@pytest.fixture(scope="session")
+def postgres_url(container_postgres_url) -> str:
+    return container_postgres_url
+
+
+@pytest.fixture(scope="session")
+async def session_factory(postgres_url) -> sessionmaker:
+    async_engine = create_async_engine(postgres_url)
     sm = sessionmaker(
-        bind=engine,
+        async_engine,
         expire_on_commit=False,
         class_=AsyncSession,
         future=True,
         autoflush=False,
     )
-    return sm
 
+    try:
+        async with async_engine.begin() as connection:
+            await connection.run_sync(Base.metadata.drop_all)
+            await connection.run_sync(Base.metadata.create_all)
 
-@pytest.fixture(scope="session")
-def db_wipe(session_factory):
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    loop.run_until_complete(wipe_db(session_factory))
-    loop.close()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def test_db(session_factory, container_postgres_url, db_wipe) -> None:
-    cfg = alembic.config.Config()
-    cfg.set_main_option("script_location", "src/infrastructure/database/migrations")
-    cfg.set_main_option("sqlalchemy.url", container_postgres_url)
-
-    revisions_dir = ScriptDirectory.from_config(cfg)
-
-    # Get & sort migrations, from first to last
-    revisions = list(revisions_dir.walk_revisions())
-    revisions.reverse()
-    for revision in revisions:
-        command.upgrade(cfg, revision.revision)
-        command.downgrade(cfg, revision.down_revision or "-1")
-        command.upgrade(cfg, revision.revision)
+        await add_initial_admins(sm, [123])
+        yield sm
+    finally:
+        await async_engine.dispose()
 
 
 @pytest.fixture(scope="function")
-async def db_session(session_factory, container_postgres_url) -> AsyncSession:
-    async with create_async_engine(container_postgres_url).connect() as connect:
-        transaction = await connect.begin()
-        async_session: AsyncSession = session_factory(bind=connect)
-        await async_session.begin_nested()
-
-        @event.listens_for(async_session.sync_session, "after_transaction_end")
-        def reopen_nested_transaction(*_):
-            if connect.closed:
-                return
-
-            if not connect.in_nested_transaction():
-                connect.sync_connection.begin_nested()
-
-        yield async_session
-        await async_session.close()
-        if transaction.is_active:
-            await transaction.rollback()
-
-
-async def wipe_db(session_factory, schema: str = "public") -> None:
+async def db_session(session_factory) -> AsyncSession:
     async with session_factory() as session:
-        await session.execute(f"DROP SCHEMA IF EXISTS {schema} CASCADE;")
-        await session.commit()
-        await session.execute(f"CREATE SCHEMA {schema};")
-        await session.commit()
+        try:
+            yield session
+        finally:
+            await session.rollback()
 
 
 class FakeSQLAlchemyBaseUoW(IUoW):
@@ -126,7 +107,7 @@ class FakeSQLAlchemyBaseUoW(IUoW):
 
 
 class FakeSQLAlchemyUoW(
-    FakeSQLAlchemyBaseUoW, IUserUoW, ITeacherUoW, IAdminUoW, IStudentUoW, IGroupUoW, ITaskUoW, IUncertainUoW
+    FakeSQLAlchemyBaseUoW, IUserUoW, ITeacherUoW, IAdminUoW, IStudentUoW, IGroupUoW, ITaskUoW, IUndefinedUoW
 ):
     def __init__(
         self,
@@ -141,8 +122,8 @@ class FakeSQLAlchemyUoW(
         group_reader: Callable[..., IGroupReader],
         group_repo: Callable[..., IGroupRepo],
         task_reader: Callable[..., ITaskReader],
-        uncertain_reader: Callable[..., IUncertainReader],
-        uncertain_repo: Callable[..., IUncertainRepo],
+        undefined_reader: Callable[..., IUndefinedReader],
+        undefined_repo: Callable[..., IUndefinedRepo],
     ):
         self.user_repo = user_repo(session)
         self.teacher_reader = teacher_reader(session)
@@ -154,8 +135,8 @@ class FakeSQLAlchemyUoW(
         self.group_reader = group_reader(session)
         self.group_repo = group_repo(session)
         self.task_reader = task_reader(session)
-        self.uncertain_reader = uncertain_reader(session)
-        self.uncertain_repo = uncertain_repo(session)
+        self.undefined_reader = undefined_reader(session)
+        self.undefined_repo = undefined_repo(session)
 
         super().__init__(session)
 
@@ -174,6 +155,6 @@ def uow(db_session) -> FakeSQLAlchemyUoW:
         group_reader=GroupReader,
         group_repo=GroupRepo,
         task_reader=TaskReader,
-        uncertain_reader=UncertainReader,
-        uncertain_repo=UncertainRepo,
+        undefined_reader=UndefinedReader,
+        undefined_repo=UndefinedRepo,
     )
