@@ -2,16 +2,12 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
+from sqlalchemy.orm import sessionmaker
 
 from src.api.factory import create_application
-from src.api.providers import (
-    bot_provider,
-    webhook_url_provider,
-    secret_provider,
-    dispatcher_provider,
-)
 from src.bot.factory import create_bot, create_dispatcher
 from src.configure import configure_logging, configure_fluent, configure_postgres
+from src.infrastructure.database.init import add_initial_admins
 from src.settings import get_settings
 
 logger = logging.getLogger(__name__)
@@ -37,9 +33,10 @@ def get_application():
         bot=bot,
         dispatcher=dispatcher,
         webhook_secret=settings.webhook.secret,
-        postgres_url=settings.postgres.url,
+        session_factory=session_factory,
         webhook_url=settings.webhook.url,
         bot_admins=settings.bot_admins,
+        use_spa=settings.web.use_spa,
     )
 
 
@@ -48,20 +45,21 @@ app = get_application()
 
 @app.on_event("startup")
 async def startup_event():
-    bot: Bot = app.dependency_overrides.get(bot_provider)()
-    webhook_url: str = app.dependency_overrides.get(webhook_url_provider)()
-    secret: str = app.dependency_overrides.get(secret_provider)()
+    bot: Bot = app.state.bot
+    webhook_url: str = app.state.webhook_url
+    secret: str = app.state.secret
+    bot_admins = app.state.bot_admins
+    sm: sessionmaker = app.state.sessionmaker
 
     await bot.delete_webhook()
-    await bot.set_webhook(
-        url=webhook_url, drop_pending_updates=True, secret_token=secret
-    )
+    await bot.set_webhook(url=webhook_url, drop_pending_updates=True, secret_token=secret)
+    await add_initial_admins(sm, bot_admins)
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    bot: Bot = app.dependency_overrides.get(bot_provider)()
-    dispatcher: Dispatcher = app.dependency_overrides.get(dispatcher_provider)()
+    bot: Bot = app.state.bot
+    dispatcher: Dispatcher = app.state.dispatcher
 
     await bot.session.close()
     await dispatcher.storage.close()

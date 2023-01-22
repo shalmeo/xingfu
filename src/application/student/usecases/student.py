@@ -11,7 +11,7 @@ from src.application.student.interfaces.uow import IStudentUoW
 from src.domain.student.services.student import create_student, update_student
 from src.application.common.exceptions.common import NotFound, AlreadyExists
 from src.application.user.dto.user import UserCreateDTO, UserUpdateDTO
-from src.domain.uncertain.services.uncertain import create_uncertain
+from src.domain.undefined.services.undefined import create_undefined
 from src.domain.user.models.user import UserRole
 from src.domain.user.services.user import create_user, update_user
 
@@ -66,7 +66,7 @@ class DeleteStudent(StudentUseCase):
     async def __call__(self, student_id: UUID) -> None:
         student = await self.uow.student_repo.get_student(student_id)
         user = await self.uow.user_repo.get_user(student.user_id)
-        uncertain = create_uncertain(
+        undefined = create_undefined(
             user_id=user.id,
             name=student.name,
             surname=student.surname,
@@ -74,7 +74,7 @@ class DeleteStudent(StudentUseCase):
             birthday=student.birthday,
         )
         user.change_own_role(UserRole.UNCERTAIN)
-        await self.uow.uncertain_repo.add_uncertain(uncertain)
+        await self.uow.undefined_repo.add_undefined(undefined)
         await self.uow.user_repo.update_user(user)
         await self.uow.student_repo.delete_student(student_id)
         await self.uow.commit()

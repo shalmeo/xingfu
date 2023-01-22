@@ -10,7 +10,7 @@ class TranslatorRunner:
     root: Root
     web: Web
     excel: Excel
-    uncertain: Uncertain
+    undefined: Undefined
 
     @staticmethod
     def back() -> Literal["""Назад"""]: ...
@@ -76,8 +76,8 @@ class RootProfileRegistry:
     student: RootProfileRegistryStudent
     groups: RootProfileRegistryGroups
     group: RootProfileRegistryGroup
-    uncertains: RootProfileRegistryUncertains
-    uncertain: RootProfileRegistryUncertain
+    undefineds: RootProfileRegistryUndefineds
+    undefined: RootProfileRegistryUndefined
     user: RootProfileRegistryUser
 
 
@@ -236,7 +236,7 @@ class RootProfileRegistryGroupSelect:
     def student() -> Literal["""&lt;b&gt;Выберите ученика&lt;/b&gt;"""]: ...
 
 
-class RootProfileRegistryUncertains:
+class RootProfileRegistryUndefineds:
     @staticmethod
     def button() -> Literal["""Неопределенные пользователи"""]: ...
 
@@ -244,9 +244,9 @@ class RootProfileRegistryUncertains:
     def text() -> Literal["""Реестр неопределенных пользователи"""]: ...
 
 
-class RootProfileRegistryUncertain:
-    select: RootProfileRegistryUncertainSelect
-    successfully: RootProfileRegistryUncertainSuccessfully
+class RootProfileRegistryUndefined:
+    select: RootProfileRegistryUndefinedSelect
+    successfully: RootProfileRegistryUndefinedSuccessfully
 
     @staticmethod
     def button(*, surname, name) -> Literal["""{ $surname } { $name }"""]: ...
@@ -266,7 +266,7 @@ class RootProfileRegistryUncertain:
 &lt;b&gt;Часовой пояс:&lt;/b&gt; &lt;code&gt;{ $timezone }&lt;/code&gt;"""]: ...
 
 
-class RootProfileRegistryUncertainSelect:
+class RootProfileRegistryUndefinedSelect:
     @staticmethod
     def role() -> Literal["""&lt;b&gt;Выберите роль&lt;/b&gt;"""]: ...
 
@@ -290,7 +290,7 @@ class RootProfileRegistryGroupSuccessfully:
     def deleted() -> Literal["""Группа успешна удалена"""]: ...
 
 
-class RootProfileRegistryUncertainSuccessfully:
+class RootProfileRegistryUndefinedSuccessfully:
     @staticmethod
     def added() -> Literal["""Пользователь успешно добавлен"""]: ...
 
@@ -304,7 +304,7 @@ class Web:
     teacher: WebTeacher
     student: WebStudent
     group: WebGroup
-    uncertain: WebUncertain
+    undefined: WebUndefined
 
 
 class WebCreate:
@@ -376,17 +376,17 @@ class WebGroupUpdate:
     def url(*, base_url, id) -> Literal["""https://{ $base_url }/group/update/{ $id }"""]: ...
 
 
-class WebUncertain:
-    sign: WebUncertainSign
+class WebUndefined:
+    sign: WebUndefinedSign
 
 
-class WebUncertainSign:
-    up: WebUncertainSignUp
+class WebUndefinedSign:
+    up: WebUndefinedSignUp
 
 
-class WebUncertainSignUp:
+class WebUndefinedSignUp:
     @staticmethod
-    def url(*, base_url, telegram_id, telegram_username) -> Literal["""https://{ $base_url }/uncertain/sign-up?telegram_id={ $telegram_id }&amp;telegram_username={ $telegram_username }"""]: ...
+    def url(*, base_url, telegram_id, telegram_username) -> Literal["""https://{ $base_url }/undefined/sign-up?telegram_id={ $telegram_id }&amp;telegram_username={ $telegram_username }"""]: ...
 
 
 class Excel:
@@ -430,65 +430,65 @@ class ExcelImporUploadRecords:
 Если число обнаруженных записей отличается от всего добавленных записей, проверьте что в файле нет записей которые есть в базе"""]: ...
 
 
-class Uncertain:
-    start: UncertainStart
+class Undefined:
+    start: UndefinedStart
 
 
-class UncertainStart:
-    review: UncertainStartReview
-    games: UncertainStartGames
-    open: UncertainStartOpen
-    invite: UncertainStartInvite
-    request: UncertainStartRequest
+class UndefinedStart:
+    review: UndefinedStartReview
+    games: UndefinedStartGames
+    open: UndefinedStartOpen
+    invite: UndefinedStartInvite
+    request: UndefinedStartRequest
 
     @staticmethod
     def text() -> Literal["""你好 или привет!
 Добро пожаловать в школу китайского языка Xingfu."""]: ...
 
 
-class UncertainStartReview:
+class UndefinedStartReview:
     @staticmethod
     def button() -> Literal["""Отзывы и результаты"""]: ...
 
 
-class UncertainStartGames:
+class UndefinedStartGames:
     @staticmethod
     def button() -> Literal["""Игры на развитие"""]: ...
 
 
-class UncertainStartOpen:
-    day: UncertainStartOpenDay
+class UndefinedStartOpen:
+    day: UndefinedStartOpenDay
 
 
-class UncertainStartOpenDay:
+class UndefinedStartOpenDay:
     @staticmethod
     def button() -> Literal["""День открытых дверей"""]: ...
 
 
-class UncertainStartInvite:
-    parent: UncertainStartInviteParent
-    student: UncertainStartInviteStudent
+class UndefinedStartInvite:
+    parent: UndefinedStartInviteParent
+    student: UndefinedStartInviteStudent
 
 
-class UncertainStartInviteParent:
+class UndefinedStartInviteParent:
     @staticmethod
     def button() -> Literal["""Пригласить родителя"""]: ...
 
 
-class UncertainStartInviteStudent:
+class UndefinedStartInviteStudent:
     @staticmethod
     def button() -> Literal["""Пригласить ученика"""]: ...
 
 
-class UncertainStartRequest:
-    trial: UncertainStartRequestTrial
+class UndefinedStartRequest:
+    trial: UndefinedStartRequestTrial
 
 
-class UncertainStartRequestTrial:
-    lesson: UncertainStartRequestTrialLesson
+class UndefinedStartRequestTrial:
+    lesson: UndefinedStartRequestTrialLesson
 
 
-class UncertainStartRequestTrialLesson:
+class UndefinedStartRequestTrialLesson:
     @staticmethod
     def button() -> Literal["""Заявка на
 пробное занятие"""]: ...

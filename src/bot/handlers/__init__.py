@@ -1,7 +1,8 @@
 from aiogram import Dispatcher, F
 
 from src.bot.handlers import root
-from src.bot.handlers import uncertain
+from src.bot.handlers import undefined
+from src.bot.handlers import student
 from src.bot.handlers import error
 
 
@@ -11,4 +12,5 @@ def setup(dispatcher: Dispatcher):
 
     # dispatcher.include_router(error.router)
     dispatcher.include_router(root.setup())
-    dispatcher.include_router(uncertain.setup())
+    dispatcher.include_router(student.setup())
+    dispatcher.include_router(undefined.setup())

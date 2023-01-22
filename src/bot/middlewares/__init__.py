@@ -1,5 +1,6 @@
 from aiogram import Dispatcher
 from sqlalchemy.orm import sessionmaker
+from src.bot.middlewares.user import UserMiddleware
 
 from src.infrastructure.localization.fluent import FluentAdapter
 from src.bot.middlewares.database import DatabaseMiddleware
@@ -12,3 +13,6 @@ def setup(dp: Dispatcher, fluent: FluentAdapter, session_maker: sessionmaker):
 
     dp.message.outer_middleware.register(DatabaseMiddleware(session_maker))
     dp.callback_query.outer_middleware.register(DatabaseMiddleware(session_maker))
+    
+    dp.message.outer_middleware.register(UserMiddleware())
+    dp.callback_query.outer_middleware.register(UserMiddleware())

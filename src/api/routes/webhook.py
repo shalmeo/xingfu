@@ -6,10 +6,10 @@ from starlette import status
 
 from src.api.providers import secret_provider, bot_provider, dispatcher_provider
 
-router = APIRouter(prefix="/telegram-webhook", tags=["Telegram Webhook"])
+router = APIRouter(tags=["Telegram Webhook"])
 
 
-@router.post("")
+@router.post("/telegram-webhook")
 async def webhook_route(
     update: Update,
     secret: SecretStr = Header(alias="X-Telegram-Bot-Api-Secret-Token"),

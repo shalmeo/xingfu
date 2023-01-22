@@ -1,12 +1,5 @@
 import pytest
 
-from src.settings import get_settings
-
-
-@pytest.fixture(scope="session")
-def settings():
-    return get_settings()
-
 
 @pytest.fixture
 def admins_excel_path() -> str:

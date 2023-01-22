@@ -791,17 +791,17 @@
 #                     f"Group with name={import_group.name} already exists"
 #                 )
 #
-#     async def get_count_uncertains(self) -> int:
+#     async def get_count_undefineds(self) -> int:
 #         return await self.session.scalar(
 #             select(func.count(models.User.id)).where(
 #                 models.User.role == UserRole.UNCERTAIN
 #             )
 #         )
 #
-#     async def get_paginate_uncertains(
+#     async def get_paginate_undefineds(
 #         self, offset, limit
-#     ) -> list[dto.PaginateUncertain]:
-#         uncertains = await self.session.scalars(
+#     ) -> list[dto.PaginateUndefined]:
+#         undefineds = await self.session.scalars(
 #             select(models.User)
 #             .where(models.User.role == UserRole.UNCERTAIN)
 #             .order_by(models.User.created_at.desc())
@@ -810,40 +810,40 @@
 #         )
 #
 #         return [
-#             dto.PaginateUncertain(
-#                 id=uncertain.id,
-#                 name=uncertain.name,
-#                 surname=uncertain.surname,
+#             dto.PaginateUndefined(
+#                 id=undefined.id,
+#                 name=undefined.name,
+#                 surname=undefined.surname,
 #             )
-#             for uncertain in uncertains
+#             for undefined in undefineds
 #         ]
 #
-#     async def get_uncertain(self, uncertain_id: int) -> dto.UncertainInfo:
-#         uncertain: models.User = await self.session.scalar(
-#             select(models.User).where(models.User.id == uncertain_id)
+#     async def get_undefined(self, undefined_id: int) -> dto.UndefinedInfo:
+#         undefined: models.User = await self.session.scalar(
+#             select(models.User).where(models.User.id == undefined_id)
 #         )
 #
-#         if uncertain is None:
-#             raise NotFound(f"Student with id={uncertain_id} not found in database")
+#         if undefined is None:
+#             raise NotFound(f"Student with id={undefined_id} not found in database")
 #
-#         return dto.UncertainInfo(
+#         return dto.UndefinedInfo(
 #             user=dto.UserInfo(
-#                 id=uncertain.id,
-#                 name=uncertain.name,
-#                 surname=uncertain.surname,
-#                 patronymic=uncertain.patronymic,
-#                 telegram_id=uncertain.telegram_id,
-#                 telegram_username=uncertain.telegram_username,
-#                 birthday=uncertain.birthday,
-#                 email=uncertain.email,
-#                 phone=uncertain.phone,
-#                 timezone=uncertain.timezone,
-#                 access_start=uncertain.access_start,
-#                 access_end=uncertain.access_end,
+#                 id=undefined.id,
+#                 name=undefined.name,
+#                 surname=undefined.surname,
+#                 patronymic=undefined.patronymic,
+#                 telegram_id=undefined.telegram_id,
+#                 telegram_username=undefined.telegram_username,
+#                 birthday=undefined.birthday,
+#                 email=undefined.email,
+#                 phone=undefined.phone,
+#                 timezone=undefined.timezone,
+#                 access_start=undefined.access_start,
+#                 access_end=undefined.access_end,
 #             ),
 #         )
 #
-#     async def delete_uncertain(self, uncertain_id: int) -> None:
+#     async def delete_undefined(self, undefined_id: int) -> None:
 #         await self.session.execute(
-#             delete(models.User).where(models.User.id == uncertain_id)
+#             delete(models.User).where(models.User.id == undefined_id)
 #         )

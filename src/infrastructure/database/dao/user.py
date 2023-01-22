@@ -1,12 +1,22 @@
 from sqlalchemy import insert, literal_column, update, select, delete
+from src.application.common.exceptions.common import NotFound
 
 from src.application.user.dto.user import UserDTO
-from src.application.user.interfaces.persistense import IUserRepo
-from src.domain.user.models.user import User
+from src.application.user.interfaces.persistense import IUserRepo, IUserReader
+from src.domain.user.models.user import User, UserRole
 from src.infrastructure.database import models
 from src.infrastructure.database.dao.dao import SQLAlchemyDAO
 
-
+class UserReader(SQLAlchemyDAO, IUserReader):
+    async def get_user_by_telegram_id(self, telegram_id: int) -> UserDTO:
+        user = await self.session.scalar(select(models.User).where(models.User.telegram_id == telegram_id))
+        
+        if not user:
+            raise NotFound
+        
+        return map_to_dto(user)
+    
+        
 class UserRepo(SQLAlchemyDAO, IUserRepo):
     async def get_user(self, user_id: int) -> User:
         user = await self.session.scalar(

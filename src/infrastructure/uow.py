@@ -13,12 +13,12 @@ from src.application.task.interfaces.persistense import ITaskReader
 from src.application.task.interfaces.uow import ITaskUoW
 from src.application.teacher.interfaces.persistense import ITeacherReader, ITeacherRepo
 from src.application.teacher.interfaces.uow import ITeacherUoW
-from src.application.uncertain.interfaces.persistense import (
-    IUncertainReader,
-    IUncertainRepo,
+from src.application.undefined.interfaces.persistense import (
+    IUndefinedReader,
+    IUndefinedRepo,
 )
-from src.application.uncertain.interfaces.uow import IUncertainUoW
-from src.application.user.interfaces.persistense import IUserRepo
+from src.application.undefined.interfaces.uow import IUndefinedUoW
+from src.application.user.interfaces.persistense import IUserReader, IUserRepo
 from src.application.user.interfaces.uow import IUserUoW
 
 
@@ -41,11 +41,12 @@ class SQLAlchemyUoW(
     IStudentUoW,
     IGroupUoW,
     ITaskUoW,
-    IUncertainUoW,
+    IUndefinedUoW,
 ):
     def __init__(
         self,
         session: AsyncSession,
+        user_reader: Callable[..., IUserReader],
         user_repo: Callable[..., IUserRepo],
         teacher_reader: Callable[..., ITeacherReader],
         teacher_repo: Callable[..., ITeacherRepo],
@@ -56,9 +57,10 @@ class SQLAlchemyUoW(
         group_reader: Callable[..., IGroupReader],
         group_repo: Callable[..., IGroupRepo],
         task_reader: Callable[..., ITaskReader],
-        uncertain_reader: Callable[..., IUncertainReader],
-        uncertain_repo: Callable[..., IUncertainRepo],
+        undefined_reader: Callable[..., IUndefinedReader],
+        undefined_repo: Callable[..., IUndefinedRepo],
     ):
+        self.user_reader = user_reader(session)
         self.user_repo = user_repo(session)
         self.teacher_reader = teacher_reader(session)
         self.teacher_repo = teacher_repo(session)
@@ -69,7 +71,7 @@ class SQLAlchemyUoW(
         self.group_reader = group_reader(session)
         self.group_repo = group_repo(session)
         self.task_reader = task_reader(session)
-        self.uncertain_reader = uncertain_reader(session)
-        self.uncertain_repo = uncertain_repo(session)
+        self.undefined_reader = undefined_reader(session)
+        self.undefined_repo = undefined_repo(session)
 
         super().__init__(session)

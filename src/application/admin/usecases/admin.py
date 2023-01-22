@@ -6,7 +6,7 @@ from src.application.admin.interfaces.uow import IAdminUoW
 from src.domain.admin.services.admin import create_admin, update_admin
 from src.application.common.exceptions.common import NotFound, AlreadyExists
 from src.application.user.dto.user import UserCreateDTO, UserUpdateDTO
-from src.domain.uncertain.services.uncertain import create_uncertain
+from src.domain.undefined.services.undefined import create_undefined
 from src.domain.user.models.user import UserRole
 from src.domain.user.services.user import create_user, update_user
 
@@ -46,7 +46,7 @@ class DeleteAdmin(AdminUseCase):
     async def __call__(self, admin_id: UUID) -> None:
         admin = await self.uow.admin_repo.get_admin(admin_id)
         user = await self.uow.user_repo.get_user(admin.user_id)
-        uncertain = create_uncertain(
+        undefined = create_undefined(
             user_id=user.id,
             name=admin.name,
             surname=admin.surname,
@@ -54,7 +54,7 @@ class DeleteAdmin(AdminUseCase):
             birthday=admin.birthday,
         )
         user.role = UserRole.UNCERTAIN
-        await self.uow.uncertain_repo.add_uncertain(uncertain)
+        await self.uow.undefined_repo.add_undefined(undefined)
         await self.uow.user_repo.update_user(user)
         await self.uow.admin_repo.delete_admin(admin_id)
         await self.uow.commit()

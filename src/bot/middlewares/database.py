@@ -9,8 +9,8 @@ from src.infrastructure.database.dao.group import GroupReader, GroupRepo
 from src.infrastructure.database.dao.student import StudentReader, StudentRepo
 from src.infrastructure.database.dao.task import TaskReader
 from src.infrastructure.database.dao.teacher import TeacherReader, TeacherRepo
-from src.infrastructure.database.dao.uncertain import UncertainReader, UncertainRepo
-from src.infrastructure.database.dao.user import UserRepo
+from src.infrastructure.database.dao.undefined import UndefinedReader, UndefinedRepo
+from src.infrastructure.database.dao.user import UserReader, UserRepo
 from src.infrastructure.uow import SQLAlchemyUoW
 
 
@@ -28,6 +28,7 @@ class DatabaseMiddleware(BaseMiddleware):
             data["session"] = session
             data["uow"] = SQLAlchemyUoW(
                 session,
+                user_reader=UserReader,
                 user_repo=UserRepo,
                 teacher_reader=TeacherReader,
                 teacher_repo=TeacherRepo,
@@ -38,8 +39,8 @@ class DatabaseMiddleware(BaseMiddleware):
                 group_reader=GroupReader,
                 group_repo=GroupRepo,
                 task_reader=TaskReader,
-                uncertain_reader=UncertainReader,
-                uncertain_repo=UncertainRepo,
+                undefined_reader=UndefinedReader,
+                undefined_repo=UndefinedRepo,
             )
             await handler(event, data)
             data.pop("session")

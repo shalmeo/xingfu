@@ -108,10 +108,10 @@ root-profile-registry-group-select-student = <b>Выберите ученика<
 
 
 
-root-profile-registry-uncertains-button = Неопределенные пользователи
-root-profile-registry-uncertains-text = Реестр неопределенных пользователи
-root-profile-registry-uncertain-button = { $surname } { $name }
-root-profile-registry-uncertain-info =
+root-profile-registry-undefineds-button = Неопределенные пользователи
+root-profile-registry-undefineds-text = Реестр неопределенных пользователи
+root-profile-registry-undefined-button = { $surname } { $name }
+root-profile-registry-undefined-info =
     <b>Неопределенный пользователь</b>
 
     <b>Фамилия:</b> <code>{$surname}</code>
@@ -125,14 +125,14 @@ root-profile-registry-uncertain-info =
 
     <b>Часовой пояс:</b> <code>{$timezone}</code>
 
-root-profile-registry-uncertain-select-role = <b>Выберите роль</b>
+root-profile-registry-undefined-select-role = <b>Выберите роль</b>
 
 root-profile-distriburions-button = Рассылки
 
 root-profile-registry-user-successfully-deleted = Пользователь успешно удален и перемещен в реестр неопределенных пользователей
 root-profile-registry-group-successfully-deleted = Группа успешна удалена
-root-profile-registry-uncertain-successfully-added = Пользователь успешно добавлен
-root-profile-registry-uncertain-successfully-rejected = Пользователь успешно отклонен
+root-profile-registry-undefined-successfully-added = Пользователь успешно добавлен
+root-profile-registry-undefined-successfully-rejected = Пользователь успешно отклонен
 
 # web app
 web-create-record-button = Создать запись
@@ -149,7 +149,7 @@ web-student-update-url = https://{ $base_url }/student/update/{ $id }
 web-group-create-url = https://{ $base_url }/group/create
 web-group-update-url = https://{ $base_url }/group/update/{ $id }
 
-web-uncertain-sign-up-url = https://{ $base_url }/uncertain/sign-up?telegram_id={ $telegram_id }&telegram_username={ $telegram_username }
+web-undefined-sign-up-url = https://{ $base_url }/undefined/sign-up?telegram_id={ $telegram_id }&telegram_username={ $telegram_username }
 
 
 # excel
@@ -165,16 +165,16 @@ excel-impor-upload-records-text =
 
 
 
-# uncertain
+# undefined
 
-uncertain-start-text =
+undefined-start-text =
     你好 или привет!
     Добро пожаловать в школу китайского языка Xingfu.
-uncertain-start-review-button = Отзывы и результаты
-uncertain-start-games-button = Игры на развитие
-uncertain-start-open-day-button = День открытых дверей
-uncertain-start-invite-parent-button = Пригласить родителя
-uncertain-start-invite-student-button = Пригласить ученика
-uncertain-start-request-trial-lesson-button =
+undefined-start-review-button = Отзывы и результаты
+undefined-start-games-button = Игры на развитие
+undefined-start-open-day-button = День открытых дверей
+undefined-start-invite-parent-button = Пригласить родителя
+undefined-start-invite-student-button = Пригласить ученика
+undefined-start-request-trial-lesson-button =
     Заявка на
     пробное занятие

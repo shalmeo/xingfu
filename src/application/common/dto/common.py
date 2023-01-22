@@ -6,10 +6,8 @@ from pydantic import BaseModel, Extra, validator
 
 class DTO(BaseModel):
     class Config:
-        use_enum_values = True
         extra = Extra.forbid
         frozen = True
-        orm_mode = True
 
 
 class BirthdayMixin(DTO):
