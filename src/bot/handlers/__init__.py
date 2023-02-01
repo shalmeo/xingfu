@@ -1,4 +1,5 @@
 from aiogram import Dispatcher, F
+from aiogram_dialog import DialogRegistry
 
 from src.bot.handlers import root
 from src.bot.handlers import undefined
@@ -14,3 +15,7 @@ def setup(dispatcher: Dispatcher):
     dispatcher.include_router(root.setup())
     dispatcher.include_router(student.setup())
     dispatcher.include_router(undefined.setup())
+
+
+def setup_dialogs(registry: DialogRegistry):
+    student.dialogs.setup(registry)

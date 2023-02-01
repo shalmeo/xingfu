@@ -37,7 +37,11 @@ def create_application(
     application.include_router(webhook.router)
 
     if use_spa:
-        application.mount("/", app=SinglePageApplication("/home/shalmeo/projects/xingfu/backend/dist"), name="SPA")
+        application.mount(
+            "/",
+            app=SinglePageApplication("/home/shalmeo/projects/xingfu/backend/dist"),
+            name="SPA",
+        )
 
     application.add_exception_handler(NotFound, not_found_error)
     application.add_exception_handler(AlreadyExists, conflict_error)

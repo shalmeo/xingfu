@@ -178,3 +178,13 @@ undefined-start-invite-student-button = Пригласить ученика
 undefined-start-request-trial-lesson-button =
     Заявка на
     пробное занятие
+
+
+# student
+student-profile-button = Профиль
+student-profile-text = Личный кабинет
+
+student-profile-work-current-button = Домашние задания
+student-profile-work-pending-button = В проверке
+student-profile-work-done-button = Выполненные
+student-profile-work-wom-button = Работа над ошибками

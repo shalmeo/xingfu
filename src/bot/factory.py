@@ -2,6 +2,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.base import BaseStorage
+from aiogram_dialog import DialogRegistry
 from sqlalchemy.orm import sessionmaker
 
 from src.infrastructure.localization.fluent import FluentAdapter
@@ -27,4 +28,11 @@ def create_dispatcher(
     handlers.setup(dispatcher)
     middlewares.setup(dispatcher, fluent, session_factory)
 
+    setup_dialogs(dispatcher)
+
     return dispatcher
+
+
+def setup_dialogs(dispatcher: Dispatcher):
+    registry = DialogRegistry(dispatcher)
+    handlers.setup_dialogs(registry)

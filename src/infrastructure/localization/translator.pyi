@@ -7,6 +7,7 @@ class TranslatorRunner:
     start: Start
     attached: Attached
     sticker: Sticker
+    student: Student
     root: Root
     web: Web
     excel: Excel
@@ -33,9 +34,6 @@ class TranslatorRunner:
     @staticmethod
     def teacher() -> Literal["""Учитель"""]: ...
 
-    @staticmethod
-    def student() -> Literal["""Ученик"""]: ...
-
 
 class Start:
     @staticmethod
@@ -50,6 +48,13 @@ class Attached:
 class Sticker:
     @staticmethod
     def welcome() -> Literal["""CAACAgIAAxkBAAEFdNli6oLvpMhSOdgE_Np34piuMhiy1QACaBkAAk5sEEtWX12hX9vgyikE"""]: ...
+
+
+class Student:
+    profile: StudentProfile
+
+    @staticmethod
+    def __call__() -> Literal["""Ученик"""]: ...
 
 
 class Root:
@@ -492,4 +497,41 @@ class UndefinedStartRequestTrialLesson:
     @staticmethod
     def button() -> Literal["""Заявка на
 пробное занятие"""]: ...
+
+
+class StudentProfile:
+    work: StudentProfileWork
+
+    @staticmethod
+    def button() -> Literal["""Профиль"""]: ...
+
+    @staticmethod
+    def text() -> Literal["""Личный кабинет"""]: ...
+
+
+class StudentProfileWork:
+    current: StudentProfileWorkCurrent
+    pending: StudentProfileWorkPending
+    done: StudentProfileWorkDone
+    wom: StudentProfileWorkWom
+
+
+class StudentProfileWorkCurrent:
+    @staticmethod
+    def button() -> Literal["""Домашние задания"""]: ...
+
+
+class StudentProfileWorkPending:
+    @staticmethod
+    def button() -> Literal["""В проверке"""]: ...
+
+
+class StudentProfileWorkDone:
+    @staticmethod
+    def button() -> Literal["""Выполненные"""]: ...
+
+
+class StudentProfileWorkWom:
+    @staticmethod
+    def button() -> Literal["""Работа над ошибками"""]: ...
 

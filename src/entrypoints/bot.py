@@ -52,7 +52,9 @@ async def startup_event():
     sm: sessionmaker = app.state.sessionmaker
 
     await bot.delete_webhook()
-    await bot.set_webhook(url=webhook_url, drop_pending_updates=True, secret_token=secret)
+    await bot.set_webhook(
+        url=webhook_url, drop_pending_updates=True, secret_token=secret
+    )
     await add_initial_admins(sm, bot_admins)
 
 
