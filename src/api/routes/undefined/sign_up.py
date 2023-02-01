@@ -29,3 +29,6 @@ async def create_undefined(undefined: UndefinedCreateRequest, uow: IUndefinedUoW
             birthday=undefined.birthday,
         ),
     )
+
+
+#   await some.send_message()

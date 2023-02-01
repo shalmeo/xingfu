@@ -4,7 +4,6 @@ from src.bot.filters.student.access import StudentAccessFilter
 from src.bot.handlers.student import start
 
 
-
 def setup() -> Router:
     router = Router()
 
